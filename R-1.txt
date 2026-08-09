@@ -1,0 +1,253 @@
+Ｐｒｏｊｅｃｔ　　：　 L3 IP-based network architecture (no vlan ) + Rocky Linux + ISO 27001:2022
+
+! Last configuration change at 17:27:48 CST Sun Aug 9 2026
+!
+version 16.7
+service timestamps debug datetime msec
+service timestamps log datetime msec show-timezone
+service password-encryption
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone CST 8 0
+no ip source-route
+!
+ --More--
+*Aug  9 13:04:33.282: BFD feature not suppoted for IPv6
+*Aug  9 13:04:33.289: BFD feature not suppoted for IPv6
+*Aug  9 13:04:33.292: BFD feature not suppote!        6
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name xyz.com
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+key chain OSPF-KEY
+ key 200
+  key-string 7 045808080E
+   cryptographic-algorithm hmac-sha-256
+password encryption aes
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 9CW1U56ULEV
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel5
+ ip address 192.168.30.33 255.255.255.248
+ ip nat inside
+ standby version 2
+ standby 5 ip 192.168.30.35
+ standby 5 priority 110
+ standby 5 preempt
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+ no negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface Port-channel6
+ ip address 192.168.30.42 255.255.255.248
+ ip nat inside
+ standby version 2
+ standby 6 ip 192.168.30.46
+ standby 6 priority 110
+ standby 6 preempt
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+ no negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface Port-channel10
+ ip address 192.168.30.81 255.255.255.248
+ standby version 2
+ standby 10 ip 192.168.30.86
+ standby 10 priority 110
+ standby 10 preempt
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+ no negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet1
+ ip address 192.168.213.12 255.255.255.0
+ ip nat outside
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 5 mode active
+!
+interface GigabitEthernet4
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 5 mode active
+!
+interface GigabitEthernet5
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 6 mode active
+!
+interface GigabitEthernet6
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 6 mode active
+!
+interface GigabitEthernet7
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 10 mode active
+!
+interface GigabitEthernet8
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 10 mode active
+!
+router ospf 100
+ default-information originate
+!
+ip default-gateway 192.168.213.1
+ip nat inside source list 1 interface GigabitEthernet1 overload
+ip forward-protocol nd
+no ip http server
+ip http authentication local
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 192.168.213.1
+!
+ip ssh version 2
+!
+logging host 192.168.213.13
+access-list 1 permit 192.168.0.0 0.0.255.255
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ stopbits 1
+line vty 0 4
+ password 7 112A3A2B27
+ login
+ transport input ssh
+line vty 5 15
+ password 7 112A3A2B27
+ login
+ transport input ssh
+!
+ntp source GigabitEthernet1
+ntp server 192.168.213.1
+ntp server 192.168.213.14
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+end
