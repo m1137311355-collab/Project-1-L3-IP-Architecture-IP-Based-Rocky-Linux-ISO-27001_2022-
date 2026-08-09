@@ -1,0 +1,180 @@
+
+Ｐｒｏｊｅｃｔ　　：　 L3 IP-based network architecture (no vlan ) + Rocky Linux + ISO 27001:2022
+
+Rocky Linux ver. 10.2 (Red Quartz)  date: 08/09/2026
+
+==============================================================================================================================================
+Stratis File System ( Server & Client ) 
+==============================================================================================================================================
+                        
+# Server
+	sudo dnf install nfs-utils -y  
+	
+	sudo systemctl enable --now nfs-server
+	sudo exportfs -r
+	sudo firewall-cmd --add-service=nfs --permanent
+	sudo firewall-cmd --permanent --add-service=rpc-bind
+	sudo firewall-cmd --permanent --add-service=mountd
+	sudo firewall-cmd --reload
+	
+	sudo systemctl enable --now rpcbind
+	sudo systemctl restart nfs-server
+	
+	mkdir -p /srv/stratis_share
+	chmod 777 /srv/stratis_share
+	sudo chcon -t public_content_rw_t /srv/stratis_share
+	sudo setsebool -P nfs_export_all_rw 1
+	
+	sudo setenforce 0
+	sudo setsebool -P nfs_export_all_rw 1
+	sudo setsebool -P nfs_export_all_ro 1
+	sudo restorecon -R /srv/stratis_share
+	sudo setenforce 1
+	
+	
+	vim /etc/exports
+		/srv/stratis_share 192.168.213.0/24(rw,sync,no_root_squash,insecure))
+	sudo exportfs -rv
+	systemctl deamon-reload
+
+
+# Client 
+	sudo dnf install nfs-utils -y   
+	sudo mkdir -p /mnt/client_stratis
+	sudo mount -t nfs 192.168.213.14:/srv/stratis_share /mnt/client_stratis
+	vim /etc/fstab
+		192.168.213.14:/srv/stratis_share  /mnt/client_stratis  nfs  defaults,_netdev  0 0
+
+==============================================================================================================================================
+Kea_DHCP_Server 
+==============================================================================================================================================
+
+dnf -y install kea-dhcp
+systemctl enable --now kea-dhcp4.service
+systemctl start kea-dhcp4.service
+
+firewall-cmd --permanent --add-port=dhcp
+systemctl enable --now firewalld.service
+systemctl restart firewalld.service
+			
+
+vim /etc/kea/kea-dhcp4.conf
+
+			{
+			  "Dhcp4": {
+				"interfaces-config": {
+				  "interfaces": [ "*" ]
+				},
+				"lease-database": {
+				  "type": "memfile",
+				  "persist": true,
+				  "name": "/var/lib/kea/dhcp4.leases"
+				},
+				"option-data": [
+				  {
+					"name": "domain-name-servers",
+					"data": "8.8.8.8"
+				  }
+				],
+				"subnet4": [
+				  {
+					"id": 1,
+					"subnet": "150.1.1.0/24",
+					"pools": [
+					  {
+						"pool": "150.1.1.10 - 150.1.1.200"
+					  }
+					],
+					"option-data": [
+					  {
+						"name": "routers",
+						"data": "150.1.1.1"
+					  }
+					]
+				  },
+				  {
+					"id": 2,
+					"subnet": "110.1.1.0/24",
+					"pools": [
+					  {
+						"pool": "110.1.1.10 - 110.1.1.200"
+					  }
+					],
+					"option-data": [
+					  {
+						"name": "routers",
+						"data": "110.1.1.1"
+					  }
+					]
+				  }
+				]
+			  }
+			}
+					 
+					 
+systemctl restart kea-dhcp4.service
+
+nmcli connection modify "cloud-init ens3" connection.id ens3
+
+
+kea-dhcp4 -t /etc/kea/kea-dhcp4.conf
+
+grep -i "dhcprelease" /var/log/messages
+
+
+
+		
+========================================================================================
+Rsyslog 
+========================================================================================
+
+sudo dnf install rsyslog -y
+
+
+
+# Firewall rule
+sudo firewall-cmd --permanent --add-port=514/tcp
+sudo firewall-cmd --permanent --add-port=514/udp
+sudo firewall-cmd --reload
+
+# SELinux rule (if using non-standard syslog ports)
+sudo semanage port -a -t syslogd_port_t -p tcp 514
+
+
+========================================================================================
+NTP 
+========================================================================================
+
+
+vim /etc/chrony.conf
+	allow 192.168.0.0/16
+	allow 192.168.213.0/24
+	allow 192.168.30.0/24
+	
+systemctl restart chronyd
+
+sudo firewall-cmd --add-service=ntp --permanent
+sudo firewall-cmd --reload
+
+chronyc sources -v 
+
+========================================================================================
+Add/Mod User 
+========================================================================================
+
+useradd -m mike
+passwd newuser
+usermod -aG wheel newuser
+
+
+chage --maxdays 60 peter
+chage --list peter 
+
+========================================================================================
+Remote Access 
+========================================================================================
+
+# Deny Root remote login 
+echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+grep -i "PermitRootLogin" /etc/ssh/sshd_config
+
