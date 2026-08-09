@@ -1,0 +1,262 @@
+Ｐｒｏｊｅｃｔ　　：　 L3 IP-based network architecture (no vlan ) + Rocky Linux + ISO 27001:2022
+
+
+Current configuration : 5376 bytes
+!
+! Last configuration change at 15:40:31 CST Sun Aug 9 2026
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service compress-config
+!
+hostname D-2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone CST 8 0
+!
+!
+!
+!
+!
+no ip source-route
+!
+!
+!
+no ip domain-lookup
+ip domain-name xyz.com
+ip cef
+no ipv6 cef
+!
+key chain OSPF-KEY
+ key 200
+   key-string 7 0110050A5A
+   cryptographic-algorithm hmac-sha-256
+password encryption aes
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+no cdp run
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ no switchport
+ ip address 192.168.30.2 255.255.255.248
+ standby version 2
+ standby 1 ip 192.168.30.6
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+!
+interface Port-channel3
+ no switchport
+ ip address 192.168.30.19 255.255.255.248
+ standby version 2
+ standby 3 ip 192.168.30.22
+ standby 3 priority 110
+ standby 3 preempt
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+!
+interface Port-channel7
+ no switchport
+ ip address 192.168.30.42 255.255.255.248
+ standby version 2
+ standby 7 ip 192.168.30.46
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+!
+interface Port-channel8
+ no switchport
+ ip address 192.168.30.49 255.255.255.248
+ standby version 2
+ standby 8 ip 192.168.30.52
+ standby 8 priority 110
+ standby 8 preempt
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+!
+interface Port-channel10
+ no switchport
+ ip address 192.168.30.82 255.255.255.248
+ standby version 2
+ standby 10 ip 192.168.30.86
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+!
+interface GigabitEthernet0/0
+ no switchport
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0/1
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ no switchport
+ no ip address
+ negotiation auto
+ channel-group 1 mode desirable
+!
+interface GigabitEthernet0/3
+ no switchport
+ no ip address
+ negotiation auto
+ channel-group 1 mode desirable
+!
+interface GigabitEthernet1/0
+ no switchport
+ no ip address
+ negotiation auto
+ channel-group 3 mode desirable
+!
+interface GigabitEthernet1/1
+ no switchport
+ no ip address
+ negotiation auto
+ channel-group 3 mode desirable
+!
+interface GigabitEthernet1/2
+ no switchport
+ no ip address
+ negotiation auto
+ channel-group 7 mode active
+!
+interface GigabitEthernet1/3
+ no switchport
+ no ip address
+ negotiation auto
+ channel-group 7 mode active
+!
+interface GigabitEthernet2/0
+ no switchport
+ no ip address
+ negotiation auto
+ channel-group 8 mode desirable
+!
+interface GigabitEthernet2/1
+ no switchport
+ no ip address
+ negotiation auto
+ channel-group 8 mode desirable
+!
+interface GigabitEthernet2/2
+ no switchport
+ no ip address
+ negotiation auto
+ channel-group 10 mode active
+!
+interface GigabitEthernet2/3
+ no switchport
+ no ip address
+ negotiation auto
+ channel-group 10 mode active
+!
+interface GigabitEthernet3/0
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet3/1
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet3/2
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet3/3
+ shutdown
+ negotiation auto
+!
+router ospf 100
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip ssh version 2
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+!
+!
+!
+!
+control-plane
+!
+banner exec ^C
+IOSv - Cisco Systems Confidential -
+
+
+Supplemental End User License Restrictions
+
+
+This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
+
+
+By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
+^C
+banner incoming ^C
+IOSv - Cisco Systems Confidential -
+
+
+Supplemental End User License Restrictions
+
+
+This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
+
+
+By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
+^C
+banner login ^C
+IOSv - Cisco Systems Confidential -
+
+
+Supplemental End User License Restrictions
+
+
+This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environment.
+
+
+By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
+^C
+!
+line con 0
+line aux 0
+line vty 0 4
+ password 7 0027302834
+ login
+ transport input ssh
+line vty 5 15
+ password 7 0027302834
+ login
+ transport input ssh
+!
+ntp source Port-channel10
+ntp server 192.168.213.14
+!
+end

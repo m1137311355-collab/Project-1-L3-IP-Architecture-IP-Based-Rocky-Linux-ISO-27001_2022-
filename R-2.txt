@@ -1,0 +1,247 @@
+
+Ｐｒｏｊｅｃｔ　　：　 L3 IP-based network architecture (no vlan ) + Rocky Linux + ISO 27001:2022
+
+
+! Last configuration change at 15:39:11 CST Sun Aug 9 2026
+! NVRAM config last updated at 18:05:56 CST Sun Aug 9 2026
+!
+version 16.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname R-2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone CST 8 0
+no ip source-route
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name xyz.com
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+ --More--
+Aug  9 13:25:35.436: BFD feature not suppoted for IPv6
+Aug  9 13:25:35.440: BFD feature not suppoted for IPv6
+Aug  9 13:25:35.444: BFD feature not suppote!        6
+!
+!
+!
+key chain OSPF-KEY
+ key 200
+  key-string 7 020507550A
+   cryptographic-algorithm hmac-sha-256
+password encryption aes
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 9TFQVONZAQI
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel5
+ ip address 192.168.30.34 255.255.255.248
+ standby version 2
+ standby 5 ip 192.168.30.35
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+ no negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface Port-channel7
+ ip address 192.168.30.41 255.255.255.248
+ standby version 2
+ standby 7 ip 192.168.30.46
+ standby 7 priority 110
+ standby 7 preempt
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+ no negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface Port-channel11
+ ip address 192.168.30.89 255.255.255.248
+ standby version 2
+ standby 11 ip 192.168.30.94
+ standby 11 priority 110
+ standby 11 preempt
+ ip ospf authentication key-chain OSPF-KEY
+ ip ospf 100 area 0
+ no negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet1
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 5 mode active
+!
+interface GigabitEthernet2
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 5 mode active
+!
+interface GigabitEthernet3
+ no ip address
+ ip ospf 100 area 0
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 7 mode active
+!
+interface GigabitEthernet6
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 7 mode active
+!
+interface GigabitEthernet7
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 11 mode active
+!
+interface GigabitEthernet8
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 11 mode active
+!
+router ospf 100
+!
+ip forward-protocol nd
+no ip http server
+ip http authentication local
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 192.168.30.33
+!
+ip ssh version 2
+!
+logging trap notifications
+logging host 192.168.213.14
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ stopbits 1
+line vty 0 4
+ password 7 022527753B
+ login
+ transport input ssh
+line vty 5 15
+ password 7 022527753B
+ login
+ transport input ssh
+!
+ntp source Port-channel5
+ntp server 192.168.213.14
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+end
