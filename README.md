@@ -1,7 +1,6 @@
 基於 L3 IP 的網路架構，整合 Rocky Linux 和 ISO 27001:2022
 
-一個企業級三層路由網路架構，整合了 Rocky Linux 基礎架構服務，並根據ISO 27001:2022資訊安全管理系統框架進行了強化。
-旨在消除傳統的二層生成樹協定 (STP) 的限制，提高收斂速度，緩解廣播風暴，並強制執行嚴格的合規性控制。
+傳統問題： 在金融、醫療、中大型企業數據中心或總部網路 ， 傳統 Layer 2 架構依賴 STP 收斂速度慢、易產生廣播風暴，且缺乏針對無 VLAN 環境的資安隔離與合規管控 ， 整合了 Rocky Linux 基礎架構服務，並根據ISO 27001:2022資訊安全管理系統框架進行了強化。
 
 ## 架構概述
 
@@ -62,5 +61,7 @@ cat /var/log/remote/192.168.30.1/2026-08-08.log | grep OSPF
 # Verify client Stratis NFS mount point
 df -h | grep stratis
 # Output: 192.168.213.14:/srv/stratis_share mounted on /mnt/client_stratis
+
+完整文件：有關完整的設計說明和完整的路由器配置，請查看上傳到此儲存庫中的原始專案文件 --> 專案名稱：Project 1-2 ： 三層 IP 網路架構 (Routed Access) 與 Rocky Linux 及 ISO 27001_2022 安
   
 
