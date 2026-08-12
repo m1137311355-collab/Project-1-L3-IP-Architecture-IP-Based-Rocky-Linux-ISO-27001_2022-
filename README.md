@@ -38,3 +38,23 @@
   * 儲存基礎架構：透過 Stratis 檔案系統自動匯出 NFS 數據stratis-cli，並動態掛載到 Rocky Linux 用戶端。
 
 
+ISO 27001:2022 安全控制實施
+控制 IDISO 27001:2022 控制名稱技術實施A.5.17身份驗證訊息已配置 Linux 帳戶密碼生命週期管理（chage -M 60）以強制輪換。  A.8.2特權存取權限對根權限和管理功能實施了嚴格的存取限制。  A.8.5安全認證已停用直接 root 使用者 SSH 登入（PermitRootLogin no），並將存取權限限制為僅限 SSHv2。。  A.8.9配置管理透過以下方式啟用最小服務佔用空間firewalld；停用未使用的交換器功能（cdp run，ip http server）。  A.8.15日誌記錄集中式 Syslog 基礎設施收集來自網路設備和 Linux 伺服器的即時事件。/var/log/remote/。  A.8.17時鐘同步透過內部 Linux Chrony Stratum 伺服器對所有節點進行 NTP 系統時鐘校準。  A.8.20網路安全透過停用不必要的舊版協定（ip source-route例如 HTTP）和加強介面邊界來降低風險暴露。。  A.8.24密碼學的應用透過驗證的 OSPF 路由鄰接關係HMAC-SHA-256、加密的 7 型密碼和 SSH 強制執行。
+
+
+驗證與命令
+1. 集中式日誌管理 (A.8.15)
+  # Verify remote logs captured from distribution/core routers
+  cat /var/log/remote/192.168.30.1/2026-08-08.log | grep OSPF
+2. OSPF 鄰域和認證 (A.8.24)
+  D-2# show ip ospf neighbor
+  Neighbor ID     Pri   State           Dead Time   Address         Interface
+  192.168.213.12    1   FULL/DR         00:00:38    192.168.30.81   Port-channel10   
+3. Linux Stratis 檔案系統自動掛載
+  # Verify client Stratis NFS mount point
+  df -h | grep stratis
+  # Output: 192.168.213.14:/srv/stratis_share mounted on /mnt/client_stratis
+4. 
+
+
+
