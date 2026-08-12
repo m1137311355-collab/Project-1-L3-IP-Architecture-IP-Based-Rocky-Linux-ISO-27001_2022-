@@ -55,9 +55,12 @@
 
 ## 驗證與命令
 ### 1. Centralized Log Management (A.8.15)
-```bash
 # Verify remote logs captured from distribution/core routers
 cat /var/log/remote/192.168.30.1/2026-08-08.log | grep OSPF
 
+2. OSPF Neighborhood & Authentication (A.8.24)
+# Verify client Stratis NFS mount point
+df -h | grep stratis
+# Output: 192.168.213.14:/srv/stratis_share mounted on /mnt/client_stratis
   
 
