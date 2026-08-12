@@ -54,17 +54,10 @@
 
 
 ## 驗證與命令
-1. 集中式日誌管理 (A.8.15)
-  # Verify remote logs captured from distribution/core routers
-  cat /var/log/remote/192.168.30.1/2026-08-08.log | grep OSPF
-2. OSPF 鄰域和認證 (A.8.24)
-  D-2# show ip ospf neighbor
-  Neighbor ID     Pri   State           Dead Time   Address         Interface
-  192.168.213.12    1   FULL/DR         00:00:38    192.168.30.81   Port-channel10   
-3. Linux Stratis 檔案系統自動掛載
-  # Verify client Stratis NFS mount point
-  df -h | grep stratis
-  # Output: 192.168.213.14:/srv/stratis_share mounted on /mnt/client_stratis
+### 1. Centralized Log Management (A.8.15)
+```bash
+# Verify remote logs captured from distribution/core routers
+cat /var/log/remote/192.168.30.1/2026-08-08.log | grep OSPF
 
   
 
