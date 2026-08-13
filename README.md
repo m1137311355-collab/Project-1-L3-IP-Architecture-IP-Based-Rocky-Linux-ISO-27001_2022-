@@ -62,6 +62,6 @@ cat /var/log/remote/192.168.30.1/2026-08-08.log | grep OSPF
 df -h | grep stratis
 # Output: 192.168.213.14:/srv/stratis_share mounted on /mnt/client_stratis
 
-完整文件：有關完整的設計說明和完整的路由器配置，請查看上傳到此儲存庫中的原始專案文件 --> 專案名稱：Project 1-1 ： 三層 IP 網路架構 (Routed Access) 與 Rocky Linux 及 ISO 27001_2022 安
+完整文件：有關完整的設計說明和完整的路由器配置，請查看上傳到此儲存庫中的原始專案文件 --> Project-1-L3-IP-Architecture-IP-Based-Rocky-Linux-ISO-27001_2022
   
 
